@@ -56,41 +56,56 @@ return -1;
 }
 
 void particao(char *vector_T, char *aux_vector_T, int *vector_R,int min, int max, int *p){
-	int a, i, temp, temp2, j, troca;
+	int a, i, temp, temp2, j, troca, auxComp;
 	a = vector_T[min]; // a é o elemento cuja posição final é procurada (pivô)
 	j = max;
 	i = min;
 	troca = 0;
 	while (i < j){
-		if (!troca)
+		if (!troca){
 			while (vector_T[i] <= vector_T[j] && i < j)
 			{
+				if (vector_T[i] == vector_T[j]){
+					printf("tes\n");
+					for (auxComp = 1; auxComp < 11; auxComp++)
+					{	
 
-				j--;
+						if(aux_vector_T[vector_R[i] + auxComp] == aux_vector_T[vector_R[j] + auxComp]); //continue if equal
+						else if (aux_vector_T[vector_R[i] + auxComp] < aux_vector_T[vector_R[j] + auxComp])
+						{
+							j--;
+							break;
+						}
+						else  break;
+					}
+				}
+				else j--;
+			}
 			}	
 		else
+		{
 			while (vector_T[i] <= vector_T[j] && i < max)
-			{
-				i++;	
+				{
+					if (vector_T[i] == vector_T[j]){
+						printf("tes2\n");
+						for (auxComp = 1; auxComp < 11; auxComp++)
+						{	
+							if(aux_vector_T[vector_R[i] + auxComp] == aux_vector_T[vector_R[j] + auxComp]); //continue if equal
+							else if (aux_vector_T[vector_R[i] + auxComp] < aux_vector_T[vector_R[j] + auxComp])
+							{
+								i++;
+								break;
+							}
+							else break;
+						}
+					}
+					else i++;
+				
+				}
 			} 
 			if (i < j){ //troca x[i] e x[j]
 		
 				temp2 = vector_R[i];				
-				/*if (vector_T[i] == vector_T[j])
-				{
-					if (vector_R[j] < vector_R[])
-					{
-						vector_R[i] = vector_R[j];
-						vector_R[j] = temp2;
-
-					}
-
-				}
-				else
-				{										
-					vector_R[i] = vector_R[j];	
-					vector_R[j] = temp2;
-				}*/
 				vector_R[i] = vector_R[j];	
 				vector_R[j] = temp2;
 				temp = vector_T[i];
