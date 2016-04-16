@@ -1,6 +1,3 @@
-//open music
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -133,93 +130,16 @@ while (EstaVazia(pilha)!=1){ // repete enquanto existir algum subvetor não clas
 }
 
 */
-
-void rotateBloco(Bloco *bloco,int N)
-{
-	int i, j, k;
-	for (i = 0; i < N-1; i++)
-	{	
-		k = N-1;
-		for (j = 0; j < N; j++)
-		{
-			if (j == 0) // coloca o primiero na ultima posição
-			{
-				bloco[i+1].string[N-1] = bloco[i].string[j];
-				//bloco[i+1].string[N] = '\0';				
-			}
-			else
-				bloco[i+1].string[j-1] = bloco[i].string[j];
-
-			
-			k--;
-		}
-	}
-}
-
-void Imprime(Bloco *bloco, int N)
+printf("dsfsdfsfasdfas\n");
+void preencheT_R(char * vector_T, int *vector_T, char *string, int N)
 {
 	int i;
-	printf("vector ini:\n");
-	
-	for (i = 0; i < N; i++)
-	{
-		printf("%s",bloco[i].string);
-		printf("\n");	
-	}
-	
-	
-	printf("\n\n");
-
-}
-
-
-void selection_sort(Bloco *bloco,int* vector_R, int tam) 
-{ 
-  int i, j, min, temp;
-  char *stringTemp;
-
-   stringTemp = (char*)malloc((tam+1)*sizeof(char));
-
-   
-  for (i = 0; i < (tam-1); i++) 
-   {
-    min = i;
-    for (j = (i+1); j < tam; j++) {
-      if(strcmp(bloco[j].string, bloco[min].string) < 0) 
-        min = j;
-    }
-    if (i != min){
-
-    	strcpy(stringTemp, bloco[i].string);
-    	strcpy(bloco[i].string, bloco[min].string);
-    	strcpy(bloco[min].string,stringTemp);
-
-    	temp = vector_R[i];
-    	vector_R[i] = vector_R[min];
-    	vector_R[min]= temp; 
-     
-    }
-
-  }
-  free(stringTemp);
-}
-
-void guardaTR(Bloco *bloco, char *vector_T, int *vector_R, char* string_rotate, int N)
-{
-	int i, j=0;
-	string_rotate[j] = bloco[j].string[N-1]; // guarda o ultimo
-	j++;
-	for(i=0; i< N; i++)
-	{
-		vector_T[i] = bloco[0].string[i]; // para mapear os caracteres
-		vector_R[i] = i; // para sabemos o inicio de cada caracter
-		string_rotate[j] = bloco[j-1].string[0];
-		j++;
+	for (i = 0; i < N-1; i++)
+	{	
+		vector_T[i] = string[i];
+		vector_R[i] = i;
 	}
 }
-
-
-
 int main ()
 {
 
@@ -237,19 +157,13 @@ int main ()
 	string_rotate = (char*)malloc((N)*sizeof(char));
 
 //
-	bloco = (Bloco*)malloc(N*sizeof(bloco));
-	for(i =0; i< N; i++)
-	{
-		bloco[i].string = (char*)malloc((N+1)*sizeof(char));
-	}
+	scanf("%s",string);
 
-	scanf("%s", bloco[0].string);
-
-	
-	rotateBloco(bloco, N);
-	guardaTR(bloco,vector_T,vector_R,string_rotate,N);
-	selection_sort(bloco,vector_R, N);
-	Imprime(bloco,N);
+	preencheT_R(vector_T,vector_T,string,N); // N is the name de bloco that need read.
+	//rotateBloco(bloco, N);
+	///guardaTR(bloco,vector_T,vector_R,string_rotate,N);
+	//selection_sort(bloco,vector_R, N);
+	//Imprime(bloco,N);
 
 
 	printf("\n\n");
