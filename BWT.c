@@ -18,10 +18,6 @@ typedef struct{
 ////////////////
 
 
-typedef struct
-{
-	char *string;
-}Bloco;
 
 Pilha *Create(int capacidade){
 
@@ -58,8 +54,8 @@ int EstaVazia(Pilha *pilha){
 
 return -1;    
 }
-/*
-void particao(Bloco *bloco,int min, int max, int *p){
+
+void particao(char *vector_T, char *aux_vector_T, int *vector_R,int min, int max, int *p){
 	int a, i, temp, temp2, j, troca;
 	a = vector_T[min]; // a é o elemento cuja posição final é procurada (pivô)
 	j = max;
@@ -67,13 +63,20 @@ void particao(Bloco *bloco,int min, int max, int *p){
 	troca = 0;
 	while (i < j){
 		if (!troca)
-			while (vector_T[i] >= vector_T[j] && i < j)	j--;
+			while (vector_T[i] <= vector_T[j] && i < j)
+			{
+
+				j--;
+			}	
 		else
-			while (vector_T[i] >= vector_T[j] && i < max) i++;
+			while (vector_T[i] <= vector_T[j] && i < max)
+			{
+				i++;	
+			} 
 			if (i < j){ //troca x[i] e x[j]
 		
 				temp2 = vector_R[i];				
-				if (vector_T[i] == vector_T[j])
+				/*if (vector_T[i] == vector_T[j])
 				{
 					if (vector_R[j] < vector_R[])
 					{
@@ -87,9 +90,9 @@ void particao(Bloco *bloco,int min, int max, int *p){
 				{										
 					vector_R[i] = vector_R[j];	
 					vector_R[j] = temp2;
-				}
-					vector_R[i] = vector_R[j];	
-					vector_R[j] = temp2;
+				}*/
+				vector_R[i] = vector_R[j];	
+				vector_R[j] = temp2;
 				temp = vector_T[i];
 				vector_T[i] = vector_T[j];
 				vector_T[j] = temp;
@@ -101,7 +104,7 @@ void particao(Bloco *bloco,int min, int max, int *p){
 	*p = j;
 }
 
-void quicksort(char *vector_T, int *vector_R, int n){
+void quicksort(char *vector_T, char *aux_vector_T,int *vector_R, int n){
 
 
 int i,j;
@@ -113,7 +116,7 @@ push(pilha, &elemento);
 while (EstaVazia(pilha)!=1){ // repete enquanto existir algum subvetor não classificado
 	pop(pilha,&elemento);
 	while(elemento.inf < elemento.sup){ // processa a subvetor seguinte
-		particao(vector_T,vector_R, elemento.inf, elemento.sup, &j);// empilha o subvetor maior
+		particao(vector_T,aux_vector_T, vector_R, elemento.inf, elemento.sup, &j);// empilha o subvetor maior
 		if(j-elemento.inf > elemento.sup-j){ // empilha o subvetor inferior
 			i = elemento.sup;
 			elemento.sup = j-1;
@@ -124,28 +127,28 @@ while (EstaVazia(pilha)!=1){ // repete enquanto existir algum subvetor não clas
 			elemento.inf = j+1;
 			push(pilha, &elemento);// processa o subvetor inferior
 			elemento.inf = i; elemento.sup = j-1;
+			}
 		}
 	}
 }
-}
 
-*/
-printf("dsfsdfsfasdfas\n");
-void preencheT_R(char * vector_T, int *vector_T, char *string, int N)
+void preencheT_R(char *vector_T,char *aux_vector_T,int *vector_R, char *string, int N)
 {
 	int i;
-	for (i = 0; i < N-1; i++)
+	for (i = 0; i < N; i++)
 	{	
-		vector_T[i] = string[i];
+		vector_T[i] = aux_vector_T[i] = string[i];
+
 		vector_R[i] = i;
 	}
 }
+
+
 int main ()
 {
 
 	int N,i; // para matriz quadrada
-	Bloco *bloco;
-	char *vector_T, *string, *string_rotate; // string vai sair depois
+	char *vector_T,*aux_vector_T, *string, *string_rotate; // string vai sair depois
 	int *vector_R;
 
 
@@ -154,12 +157,13 @@ int main ()
 	string = (char*)malloc((N+1)*sizeof(char));
 	vector_R = (int*)malloc((N)*sizeof(int));
 	vector_T = (char*)malloc((N)*sizeof(char));
+	aux_vector_T = (char*)malloc((N)*sizeof(char));
 	string_rotate = (char*)malloc((N)*sizeof(char));
 
-//
 	scanf("%s",string);
 
-	preencheT_R(vector_T,vector_T,string,N); // N is the name de bloco that need read.
+	preencheT_R(vector_T,aux_vector_T,vector_R,string,N); // N is the name de bloco that need read.
+	quicksort(vector_T,aux_vector_T,vector_R,N);
 	//rotateBloco(bloco, N);
 	///guardaTR(bloco,vector_T,vector_R,string_rotate,N);
 	//selection_sort(bloco,vector_R, N);
@@ -167,9 +171,9 @@ int main ()
 
 
 	printf("\n\n");
-	for (i = 0;i < N; i++)
+	for (i = 0; i < N; i++)
 	{
-		printf("%c -> %d\n",vector_T[vector_R[i]], vector_R[i]);
+		printf("%c -> %d\n",vector_T[i], vector_R[i]);
 		
 		
 	}
