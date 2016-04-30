@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+// ir para o TAD
+#define tamAscii 254
+
 void preencheT_R(char *vector_T,char *aux_vector_T,int *vector_R, char *string, int N)
 {
 	int i;
@@ -97,12 +101,72 @@ void pegaLinhaF(char *string_rotate, char *vector_T, int N) // pega a ultima lin
 	for (i=1; i < N; i++) string_rotate[i] = vector_T[i-1];
 }
 
+void acharFrequencialetras(char *string, float *vetorFrequencia, int N)
+{
+	int i = 0; 
+	int numero; // para receber a posição o valor correspondete a tabela ascii 
+
+	for (i = 0; i < N-1; i++)
+	{
+		numero = string[i];		
+		//já calcula a frequencia
+		vetorFrequencia[numero]+= 1/(float)(N);
+			
+
+	}
+}
+
+// para teste
+void imprimeFrequencia(float *vetorFrequencia)
+{
+	int i;
+
+	for (i = 0; i < tamAscii; i++) if (vetorFrequencia[i] != 0)	printf("%c ->%0.2f\n", i,vetorFrequencia[i]);
+	
+
+}
+
+void calculaRunLengthFrequencia(char *bloco, int *vectorRunlength, int *vector_R, int N) // para achar a quantidade de vezes que aparece em um vetor
+{
+
+	int i,j=0;
+	for (i=0; i < N-1; i++)
+	{
+		if(bloco[vector_R[i]] == bloco[vector_R[i+1]])
+		{
+			vectorRunlength[j]+=1;
+				
+		}
+		else
+		{
+			vectorRunlength[j]+=1; 
+			j++;
+		}
+		
+		
+	}
+	if (bloco[i-1]== bloco[i]) 	vectorRunlength[j]+=1;
+	else
+	{
+		vectorRunlength[j]+=1;
+		j++;	
+	} 
+
+
+}
+
+
+
+
 int main()
 {
 
 	int N,i; // para matriz quadrada
 	char *vector_T,*aux_vector_T, *string, *string_rotate; // string vai sair depois
 	int *vector_R;
+	float *vetorFrequencia;
+	int *vectorRunlength;
+
 
 
 	scanf("%d", &N);
@@ -112,6 +176,10 @@ int main()
 	vector_T = (char*)malloc((N)*sizeof(char));
 	aux_vector_T = (char*)malloc((N)*sizeof(char));
 	string_rotate = (char*)malloc((N)*sizeof(char));
+	vetorFrequencia = (float*)malloc((tamAscii)*sizeof(float)); // para zerar
+
+	vectorRunlength = (int*)malloc((N)*sizeof(int)); // para calcular a frequencia de letras.
+
 
 	scanf("%s",string);
 
@@ -119,10 +187,33 @@ int main()
 	pegaLinhaF(string_rotate,vector_T,N);
 	quickSort(vector_T, aux_vector_T,vector_R,0,N-1,N);
 
+
+
+
+	/*for (i = 0;i < N; i++)	printf("%c -> %d\n",vector_T[i], vector_R[i]);
+	printf("\n\n\n");		
+
+	quickSort(vector_T, aux_vector_T,vector_R,0,N-1,N);
+	for (i = 0;i < N; i++)	printf("%c -> %d\n",vector_T[i],vector_R[i]);
+	printf("\n\n\n");		
+
 	for (i = 0;i < N; i++)	printf("%c -> %d\n",string_rotate[vector_R[i]], vector_R[i]);
 	printf("\n\n");
+	quickSort(string_rotate, aux_vector_T,vector_R,0,N-1,N);
+	printf("Rotate_ordenada\n");
+	for (i = 0;i < N; i++)	printf("%c -> %d\n",string_rotate[i], vector_R[i]);
+	printf("\n\n");*/
+	
+	for (i = 0;i < N; i++)	printf("%c -> %d\n",string_rotate[vector_R[i]], vector_R[i]);
+	printf("\n\n");
+	
+	acharFrequencialetras(string,vetorFrequencia,N);
+	imprimeFrequencia(vetorFrequencia);
 
-
+	printf("\n\nUsar no run lenght\n");
+	calculaRunLengthFrequencia(string_rotate,vectorRunlength,vector_R,N);
+	for (i = 0;i < N; i++) printf("%d\n",vectorRunlength[i]);
+	printf("\n\n");
 	/*
 	FILE *arq;
 	int result,i=0;
