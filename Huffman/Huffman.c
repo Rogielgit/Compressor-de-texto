@@ -37,7 +37,6 @@ void criar_arvore_huffman(HUFFMAN *huffman, char *msg) {
 
   int i, freq[TAM];
   for (i = 0; i < TAM; i++) freq[i] = 0;
-    /*trocar por malloc*/
   for (i = 0; msg[i] != '\0'; i++) freq[(int) msg[i]]++; // cria a frequencia
 
   HEAP_ESTATICA *heap = criar_heap();
@@ -74,7 +73,9 @@ void criar_codigo_aux(HUFFMAN *huffman, NO *no, char *cod, int fim) {
     if (no->filhoesq == NULL && no->filhodir == NULL)
     {
       int i;
-      for (i = 0; i <= fim; i++)  huffman->codigo[(int) no->simbolo][i] = cod[i];
+      for (i = 0; i <= fim; i++) {
+        huffman->codigo[(int) no->simbolo][i] = cod[i];
+      }
       huffman->codigo[(int) no->simbolo][fim + 1] = '\0';
 
     }else {
@@ -95,42 +96,31 @@ void criar_codigo_aux(HUFFMAN *huffman, NO *no, char *cod, int fim) {
   }
 }
 
-void criar_codigo(HUFFMAN *huffman){
-
+void criar_codigo(HUFFMAN *huffman) {
   char codigo[TAM];
   criar_codigo_aux(huffman, huffman->arvore->raiz, codigo, -1);
 }
 
-void codificar(HUFFMAN *huffman, char *msg, char *cod, int N)
+void codificar(HUFFMAN *huffman, char *msg, char *cod)
 {
  
   int i, j, cod_fim;
   cod_fim = -1;
 
-  for (i = 0; i < N; i++)
+  for (i = 0; msg[i] != '\0'; i++)
   {
     char *pcod = huffman->codigo[(int)msg[i]];
+    printf("%c->",msg[i]);
     for (j = 0; pcod[j] != '\0'; j++)
     {
+      printf("%c",pcod[j]);
       cod_fim++;
       cod[cod_fim] = pcod[j];
     }
+    printf("\n");
 
   }
   cod[cod_fim + 1] = '\0';
-}
-
-int tamanhoHuffman(HUFFMAN *huffman, char *bloco, int N)
-{
-  int tam = 0, i,j;
-  for (i = 0; i < N; i++)
-  {
-    char *pcod = huffman->codigo[(int)bloco[i]];
-    for (j = 0; pcod[j] != '\0'; j++) tam++;
-  }
- 
-
-  return tam;
 }
 
 int decodificar(HUFFMAN *huffman, char *cod, char *msg){
@@ -195,6 +185,7 @@ int codificarHuffmanRunLength(HUFFMAN *huffman, char *bloco, char *stringRunLeng
           stringRunLength[k] = pcod[f];        
           k++;      
         }
+        printf("\n");   
       }
      }
     pcod = huffman->codigo[(int)bloco[i]];
