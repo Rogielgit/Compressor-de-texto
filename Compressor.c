@@ -40,12 +40,13 @@ int main(int argc, char *argv[])
 	int i=0; 
 	char *vector_T,*aux_vector_T,*string_rotate; // string vai sair depois
 	int *vector_R, tamanhoFreq, tamRunlenght, tamanho,*vetorFreqK, *vetorC, a;
-	float *vetorFrequencia;
+	int tamHuffman;
+	
 	char *stringRunLength, *vetor_F;
 	char *blocoDescod, *bloco;
 	char *vetor_k;
 
-	char codificado[1000];
+	char *blococofHuff;
   	char decodificado[1000];
 
   	char saidaCmp[5];
@@ -56,8 +57,8 @@ int main(int argc, char *argv[])
   	
   	if (strcmp(argv[1],"-i") == 0)
   	{
-  		printf("entrada \n");
-  		printf("%s\n",argv[2]);
+  		//printf("entrada \n");
+  		//printf("%s\n",argv[2]);
 
   		arq = fopen(argv[2], "r");
   		if (arq == NULL)
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
 		tratarArgv(argv[6],saidaCmp);
   		tamBloco = atoi(saidaCmp);
 
-  		bloco = (char*)malloc((tamBloco)*sizeof(char)); // para calcular a frequencia de letras.
+  		bloco = (char*)malloc((tamBloco+1)*sizeof(char)); // para calcular a frequencia de letras.
 		stringRunLength = (char*)malloc(100*sizeof(char)); // para calcular a frequencia de letras.
 		vetor_F = (char*)malloc(tamBloco*sizeof(char));
 		vetor_k = (char*)malloc(sizeof(char));
@@ -81,8 +82,8 @@ int main(int argc, char *argv[])
       		bloco[i] =ch;
       		i++;
   		}
-  		
-  		printf("tamBloco %d\n",tamBloco);
+  		bloco[i] = '\0';
+  		//printf("tamBloco %d\n",tamBloco);
   		tratarArgv(argv[5],saidaCmp);
   		if (strcmp(saidaCmp,"true") == 0) // bwt
   		{
@@ -132,27 +133,48 @@ int main(int argc, char *argv[])
   		{
   			huffman = criar_huffman();
 
-  			criar_arvore_huffman(huffman,bloco); // tem que passar a mensagem com '\0'
+  			if(passo1 == 1)
+  			{
+  				criar_arvore_huffman(huffman,blocoDescod);
+           		tamHuffman = tamanhoHuffman(huffman,bloco,tamBloco);
+ 
+
+  			}
+  			else criar_arvore_huffman(huffman,bloco); 
+
+
   			criar_codigo(huffman);
-  			codificar(huffman,bloco,codificado);
+			blococofHuff = (char*)malloc(tamHuffman*sizeof(char));
+			printf("TA -%d\n", tamanhoHuffman(huffman,bloco, tamBloco));
+  			codificar(huffman,bloco,blococofHuff,tamBloco);
+ 			for(i =0; i < tamHuffman; i++) printf("%c", blococofHuff); // arrumar
+ 				printf("\n");
 
 
 
 
+int tamanhoHuffman(HUFFMAN *huffman, char *bloco, int N)
+{
+  int tam = 0, i,j;
+  for (i = 0; i < N; i++)
+  {
+    char *pcod = huffman->codigo[(int)bloco[i]];
+    for (j = 0; pcod[j] != '\0'; j++) tam++;
+  }
+ 
 
+  return tam;
+}
 
   			//para descodificar
   			/*
   			decodificar(huffman,codificado,decodificado);
- 			printf("codificacao: %s\n", codificado); // arrumar
   			printf("decodificacao: %s\n", decodificado); // arrumar
 			*/
 
 
 
    	//apagar_huffman(&huffman);
-
-
 
   			passo1 = 2;
 
