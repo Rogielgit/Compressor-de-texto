@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 
 	FILE *arq, *arqSaida;
 
-	int i=0,j = 0; 
+	int i=0,j = 0, flag = 0, flag2 = 0; 
 	char *vector_T,*aux_vector_T,*string_rotate; // string vai sair depois
 	int *vector_R, tamanhoFreq, tamRunlenght, tamanho,*vetorFreqK, *vetorC, a;
 	int tamHuffman;
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
   	char decodificado[1000];
 
   	char saidaCmp[5];
-  	int tamBloco, passo1 = 0, passo2 = 0, passo3 = 0;
+  	int tamBloco, tamBlocoOri, passo1 = 0, passo2 = 0, passo3 = 0;
   	char ch;
 	HUFFMAN *huffman;
 
@@ -68,17 +68,16 @@ int main(int argc, char *argv[])
 		}
 		
 		tratarArgv(argv[6],saidaCmp);
-  		tamBloco = atoi(saidaCmp);
+  		tamBlocoOri = tamBloco = atoi(saidaCmp);
 
   		bloco = (char*)malloc((tamBloco+1)*sizeof(char)); // para calcular a frequencia de letras.
 		stringRunLength = (char*)malloc(100*sizeof(char)); // para calcular a frequencia de letras.
-		vetor_F = (char*)malloc(tamBloco*sizeof(char));
-		vetor_k = (char*)malloc(sizeof(char));
-		vetorC = (int*)malloc(tamBloco*sizeof(int));
 		blocoDescod = (char*)malloc(tamBloco*sizeof(char)); // para calcular a frequencia de letras.
 
 		ch = getc(arq);
-		while (ch != EOF){
+		while (ch != EOF)
+		{ 
+			
 
 			while (ch != EOF && j < tamBloco)
 			{	
@@ -87,7 +86,10 @@ int main(int argc, char *argv[])
 		  		j++;
 			}
 			bloco[j] = '\0';
-			if (j < tamBloco) tamBloco = j;
+			//for (i = 0; i < tamBloco; i++) printf("%c",bloco[i]);
+			if (j < tamBloco) tamBloco = j-1;
+			printf("Aqui\n");
+		for (i = 0; i < tamBloco; i++) printf("%c",bloco[i]);
 			j=0;
 			
 			//printf("tamBloco %d\n",tamBloco);
@@ -95,12 +97,15 @@ int main(int argc, char *argv[])
 				if (strcmp(saidaCmp,"true") == 0) // bwt
 				{
 
-					vector_R = (int*)malloc((tamBloco)*sizeof(int));
+				vector_R = (int*)malloc((tamBloco)*sizeof(int));
 				vector_T = (char*)malloc((tamBloco)*sizeof(char));
 				aux_vector_T = (char*)malloc((tamBloco)*sizeof(char));
 				string_rotate = (char*)malloc((tamBloco)*sizeof(char));
+				vetor_F = (char*)malloc(tamBloco*sizeof(char));
+				vetor_k = (char*)malloc(sizeof(char));
+				vetorC = (int*)malloc(tamBloco*sizeof(int));
 
-					preencheT_R(vector_T,bloco,aux_vector_T,vector_R,tamBloco); // N is the name de bloco that need read.
+				preencheT_R(vector_T,bloco,aux_vector_T,vector_R,tamBloco); // N is the name de bloco that need read.
 				pegaLinhaL(string_rotate,vector_T,tamBloco);
 				quickSort(vector_T, aux_vector_T,vector_R,0,tamBloco-1,tamBloco);
 
@@ -128,10 +133,13 @@ int main(int argc, char *argv[])
 				printf("\n\n");*/
 
 
-				free(vector_R);
+					free(vector_R);
 					free(vector_T);
 					free(aux_vector_T);
-				free (string_rotate);
+					free (string_rotate);
+					free (vetor_F);
+					free(vetor_k);
+					free(vetorC);
 				} 	
 				
 				tratarArgv(argv[7],saidaCmp);
@@ -159,7 +167,7 @@ int main(int argc, char *argv[])
 
 
 					//para descodificar
-					/*
+					/*			bloco[j] = '\0';
 					decodificar(huffman,codificado,decodificado);
 					printf("decodificacao: %s\n", decodificado); // arrumar
 				*/
@@ -228,14 +236,17 @@ int main(int argc, char *argv[])
 				for (i = 0; i < N; i++) printf("%c",blocoDescod[i]);
 				printf("\n\n");*/
 			}
-		}
-  	}
-  	
-  	if (strcmp(argv[3],"-o") == 0)
-  	{
 
-  		arqSaida = fopen(argv[4], "wb+");
-  		if (arq == NULL)
+	
+  	
+
+  		if (flag == 0)
+  		{
+  			arqSaida = fopen(argv[4], "wb+");
+  			flag =1; // para abrir o arquivo somente uma vez	
+  		} 
+
+  		if (arqSaida == NULL)
 		{
 			printf("Nao foi possivel abrir\n");
 			exit(0);
@@ -243,9 +254,36 @@ int main(int argc, char *argv[])
 
 		if (passo1 == 1 && passo2 != 1 && passo3 != 1) // apenas bwt 
 		{
-			fwrite(&tamBloco,sizeof(int),1,arqSaida);
+			/*write(&tamBloco,sizeof(int),1,arqSaida);
 			fwrite(&a,sizeof(int),1,arqSaida);
-			fwrite(blocoDescod,tamBloco,1,arqSaida);
+			fwrite(blocoDescod,tamBloco,1,arqSaida);*/
+			printf("gravou\n");
+			if (tamBloco != tamBlocoOri) // chegou no EOF
+			{
+				fprintf(arqSaida, "%d%d",tamBloco,a);	
+				fprintf(arqSaida, "%s",blocoDescod);	
+			}
+			else
+			{
+				if (flag2 == 0)
+				{
+					fprintf(arqSaida, "%d",tamBloco); // para salva somente uma vez o tambloco	
+					flag2 = 1;	
+				} 
+				fprintf(arqSaida, "%d",a);	
+				fprintf(arqSaida, "%s",blocoDescod);
+			}
+			
+
+		
+
+
+
+
+
+
+
+
 		}
 		else if (passo1 != 1 && passo2 == 1 && passo3 != 1) // apenas huffman
 		{
@@ -271,26 +309,20 @@ int main(int argc, char *argv[])
 		{
 		 	fprintf(arqSaida, "%d%d%d\n",tamBloco,a,tamRunlenght);	
 			fprintf(arqSaida, "%s",stringRunLength);
-		}
-	
-		
+		}	
 
-
-
-		
-
-
+	 }
   	}
+  	
+  	
   	
   	
 
 	fclose (arq);
-	//fclose(arqSaida);
+	fclose(arqSaida);
   	free(bloco);  	
 	free(stringRunLength);
-	free(vetor_F);
-	free(vetor_k);
-	free(vetorC);
+	
 	free(blocoDescod);
  	
 
