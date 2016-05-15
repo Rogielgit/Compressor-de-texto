@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 {
 
 
-	FILE *arq;
+	FILE *arq, *arqSaida;
 
 	int i=0; 
 	char *vector_T,*aux_vector_T,*string_rotate; // string vai sair depois
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
   	char decodificado[1000];
 
   	char saidaCmp[5];
-  	int tamBloco, passo1 = 0, passo2 = 0;
+  	int tamBloco, passo1 = 0, passo2 = 0, passo3 = 0;
   	char ch;
 	HUFFMAN *huffman;
 
@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 			printf("Nao foi possivel abrir\n");
 			exit(0);
 		}
+		
 		tratarArgv(argv[6],saidaCmp);
   		tamBloco = atoi(saidaCmp);
 
@@ -125,8 +126,7 @@ int main(int argc, char *argv[])
   			free(vector_T);
   			free(aux_vector_T);
 			free (string_rotate);
-  		}
-  	
+  		} 	
   		
   		tratarArgv(argv[7],saidaCmp);
   		if (strcmp(saidaCmp,"true")==0) // huffman
@@ -189,40 +189,95 @@ int main(int argc, char *argv[])
 				tamRunlenght = codificarHuffmanRunLength(huffman,bloco,stringRunLength,tamBloco);
 				printf("tamanho %d\n",tamRunlenght);
 				for (i = 0; i < tamRunlenght; i++) printf("%c",stringRunLength[i]);
-				printf("\n\n");
+				printf("\n\n");	
+			}
 
+			else if (passo1 != 1 && passo2 != 1)
+			{
+				tamRunlenght = calculaRunLengthFrequencia(bloco,stringRunLength,tamBloco);
+				printf("tamanho %d\n",tamRunlenght);
+				for (i = 0; i < tamRunlenght; i++) printf("%c",stringRunLength[i]);
+				printf("\n\n");
+			} 
+			else 
+			{
+
+				printf("Huffman para Run-Length\n");	
+				tamRunlenght = codificarHuffmanRunLength(huffman,blocoDescod,stringRunLength,tamBloco);
+				printf("tamanho %d\n",tamRunlenght);
+				for (i = 0; i < tamRunlenght; i++) printf("%c",stringRunLength[i]);
+				printf("\n\n");	
+			 }
+			
+				
 			//para decodificar
 			/*
 				decodificarHuffmanRunLength(huffman,stringRunLength,blocoDescod,N, tamRunlenght);
 				for (i =0; i<N; i++) printf("%c",blocoDescod[i]);
 				printf("\n");*/
-			}
-			else
-			{
-				tamRunlenght = codificarHuffmanRunLength(huffman,blocoDescod,stringRunLength,tamBloco);
-				printf("tamanho %d\n",tamRunlenght);
-				for (i = 0; i < tamRunlenght; i++) printf("%c",stringRunLength[i]);
-				printf("\n\n");
-			} 
-			
-				
-			
 					
 
-			
-/*			descodificaRunLenght(stringRunLength,blocoDescod,tamRunlenght);
+			passo3 = 1;
+			/*			descodificaRunLenght(stringRunLength,blocoDescod,tamRunlenght);
 			for (i = 0; i < N; i++) printf("%c",blocoDescod[i]);
 			printf("\n\n");*/
 		}
   	}
-  	else
+  	
+  	if (strcmp(argv[3],"-o") == 0)
   	{
-  		printf("Saida %s\n", argv[4]);
-  		
-  	}
 
+  		arqSaida = fopen(argv[4], "wb+");
+  		if (arq == NULL)
+		{
+			printf("Nao foi possivel abrir\n");
+			exit(0);
+		}
+
+		if (passo1 == 1 && passo2 != 1 && passo3 != 1) // apenas bwt 
+		{
+			fprintf(arqSaida, "%d%d\n",tamBloco,a);	
+			fprintf(arqSaida, "%s",blocoDescod);
+		}
+		else if (passo1 != 1 && passo2 == 1 && passo3 != 1) // apenas huffman
+		{
+			fprintf(arqSaida, "%d%d\n",tamBloco,tamHuffman);	
+			fprintf(arqSaida, "%s",blococofHuff);	
+		}
+		else if (passo1 != 1 && passo2 != 1 && passo3 == 1) // runlenght
+		{
+			fprintf(arqSaida, "%d%d\n",tamBloco,tamRunlenght);	
+			fprintf(arqSaida, "%s",stringRunLength);
+		}
+		else if (passo1 == 1 && passo2 == 1 && passo3 != 1) // bwt e huffman
+		{
+			fprintf(arqSaida, "%d%d%d\n",tamBloco,a,tamHuffman);	
+			fprintf(arqSaida, "%s",blocoDescod);
+		}
+		else if (passo1 != 1 && passo2 == 1 && passo3 == 1) // huffman e runlenght
+		{
+			fprintf(arqSaida, "%d%d\n",tamBloco,tamRunlenght);	
+			fprintf(arqSaida, "%s",stringRunLength);
+		}
+		else // bwt, huffman e  runlenght
+		{
+		 	fprintf(arqSaida, "%d%d%d\n",tamBloco,a,tamRunlenght);	
+			fprintf(arqSaida, "%s",stringRunLength);
+		}
+	
+		
+
+
+
+		
+
+
+  	}
+  	
+  	
 
 	fclose (arq);
+	//fclose(arqSaida);
   	free(bloco);  	
 	free(stringRunLength);
 	free(vetor_F);
