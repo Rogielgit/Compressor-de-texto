@@ -20,7 +20,7 @@ void criar_arvore_huffman(HUFFMAN *huffman, char *msg);
 
 void criar_codigo(HUFFMAN *huffman);
 
-void codificar(HUFFMAN *huffman, char *msg, char *cod, int N);
+void codificar(HUFFMAN *huffman, char *msg, char *cod);
 
 int decodificar(HUFFMAN *huffman, char *cod, char *msg);
 

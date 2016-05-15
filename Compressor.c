@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
   	char decodificado[1000];
 
   	char saidaCmp[5];
-  	int tamBloco, passo1 = 0;
+  	int tamBloco, passo1 = 0, passo2 = 0;
   	char ch;
 	HUFFMAN *huffman;
 
@@ -132,39 +132,25 @@ int main(int argc, char *argv[])
   		if (strcmp(saidaCmp,"true")==0) // huffman
   		{
   			huffman = criar_huffman();
+			criar_arvore_huffman(huffman,bloco); 
+			criar_codigo(huffman);
+			tamHuffman = tamanhoHuffman(huffman,bloco,tamBloco);
+       		blococofHuff = (char*)malloc((tamHuffman)*sizeof(char));
 
-  			if(passo1 == 1)
-  			{
-  				criar_arvore_huffman(huffman,blocoDescod);
-           		tamHuffman = tamanhoHuffman(huffman,bloco,tamBloco);
- 
-
-  			}
-  			else criar_arvore_huffman(huffman,bloco); 
+  			if(passo1 == 1)	codificar(huffman,blocoDescod,blococofHuff);
 
 
-  			criar_codigo(huffman);
-			blococofHuff = (char*)malloc(tamHuffman*sizeof(char));
-			printf("TA -%d\n", tamanhoHuffman(huffman,bloco, tamBloco));
-  			codificar(huffman,bloco,blococofHuff,tamBloco);
- 			for(i =0; i < tamHuffman; i++) printf("%c", blococofHuff); // arrumar
- 				printf("\n");
+  			 else codificar(huffman,bloco,blococofHuff);
+
+		
+		//	printf("TA %d\n", tamanhoHuffman(huffman,bloco,tamBloco));
+ 			for(i =0; i < tamHuffman; i++) printf("%c", blococofHuff[i]); // arrumar
+ 			printf("\n");
 
 
 
 
-int tamanhoHuffman(HUFFMAN *huffman, char *bloco, int N)
-{
-  int tam = 0, i,j;
-  for (i = 0; i < N; i++)
-  {
-    char *pcod = huffman->codigo[(int)bloco[i]];
-    for (j = 0; pcod[j] != '\0'; j++) tam++;
-  }
- 
 
-  return tam;
-}
 
   			//para descodificar
   			/*
@@ -176,7 +162,7 @@ int tamanhoHuffman(HUFFMAN *huffman, char *bloco, int N)
 
    	//apagar_huffman(&huffman);
 
-  			passo1 = 2;
+  			passo2 = 1;
 
 
 
@@ -187,11 +173,16 @@ int tamanhoHuffman(HUFFMAN *huffman, char *bloco, int N)
   			 /**Run-Length**/
 			printf("\n\nUsar no run lenght\n");
 			printf("Vetor - TES\n");
-			for (i = 0;i < tamBloco; i++) printf("%c",bloco[i]);
+			for (i = 0; i < tamBloco; i++) printf("%c",bloco[i]);
 			printf("\n\n");
-			if (passo1 == 1) tamRunlenght = calculaRunLengthFrequencia(bloco,stringRunLength,tamBloco); //passa a string que queremos codificar(pura,huffman, BWT)
+			if (passo1 == 1 && passo2 != 1) 
+			{
+				tamRunlenght = calculaRunLengthFrequencia(blocoDescod,stringRunLength,tamBloco); //passa a string que queremos codificar(pura,huffman, BWT)
+				for (i = 0; i < tamRunlenght; i++) printf("%c",stringRunLength[i]);
+			printf("\n\n");
+			}
 			//arrumar as combinações
-			else if (passo1 == 2)
+			else if (passo2 == 1 && passo1 != 1) // não passou pelo bwt
 			{
 
 				printf("Huffman para Run-Length\n");	
@@ -205,9 +196,15 @@ int tamanhoHuffman(HUFFMAN *huffman, char *bloco, int N)
 				decodificarHuffmanRunLength(huffman,stringRunLength,blocoDescod,N, tamRunlenght);
 				for (i =0; i<N; i++) printf("%c",blocoDescod[i]);
 				printf("\n");*/
-			
 			}
-			else tamRunlenght = calculaRunLengthFrequencia(blocoDescod,stringRunLength,tamBloco); // passa a string que queremos codificar(pura,huffman, BWT)
+			else
+			{
+				tamRunlenght = codificarHuffmanRunLength(huffman,blocoDescod,stringRunLength,tamBloco);
+				printf("tamanho %d\n",tamRunlenght);
+				for (i = 0; i < tamRunlenght; i++) printf("%c",stringRunLength[i]);
+				printf("\n\n");
+			} 
+			
 				
 			
 					

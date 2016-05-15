@@ -17,7 +17,6 @@ int calculaRunLengthFrequencia(char *bloco, char *stringRunLength, int N) // par
 	
 	for (i= 0; i < N-1; i++)
 	{
-		printf("a -%c\n",bloco[0]);
 		if(bloco[i] == bloco[i+1]) quantRepet+=1; // vai guardando quant que o caracter aparece em seguida
 		else
 		{

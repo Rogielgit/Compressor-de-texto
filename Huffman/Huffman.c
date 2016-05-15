@@ -1,3 +1,4 @@
+
 /*
 * Codigo baseado na Aula do Paulovich
 *
@@ -110,17 +111,14 @@ void codificar(HUFFMAN *huffman, char *msg, char *cod)
   for (i = 0; msg[i] != '\0'; i++)
   {
     char *pcod = huffman->codigo[(int)msg[i]];
-    printf("%c->",msg[i]);
     for (j = 0; pcod[j] != '\0'; j++)
     {
-      printf("%c",pcod[j]);
       cod_fim++;
       cod[cod_fim] = pcod[j];
     }
-    printf("\n");
 
   }
-  cod[cod_fim + 1] = '\0';
+ // cod[cod_fim + 1] = '\0';
 }
 
 int decodificar(HUFFMAN *huffman, char *cod, char *msg){
@@ -185,7 +183,6 @@ int codificarHuffmanRunLength(HUFFMAN *huffman, char *bloco, char *stringRunLeng
           stringRunLength[k] = pcod[f];        
           k++;      
         }
-        printf("\n");   
       }
      }
     pcod = huffman->codigo[(int)bloco[i]];
@@ -210,6 +207,20 @@ int codificarHuffmanRunLength(HUFFMAN *huffman, char *bloco, char *stringRunLeng
   
     
 return k;
+}
+
+
+int tamanhoHuffman(HUFFMAN *huffman, char *bloco, int N)
+{
+  int tam = 0, i,j;
+  for (i = 0; i < N; i++)
+  {
+    char *pcod = huffman->codigo[(int)bloco[i]];
+    for (j = 0; pcod[j] != '\0'; j++) tam++;
+  }
+ 
+
+  return tam;
 }
 
 int decodificarHuffmanRunLength(HUFFMAN *huffman, char *stringRunLength, char *blocoDescod,int N, int tamRunlenght)
@@ -260,10 +271,6 @@ int decodificarHuffmanRunLength(HUFFMAN *huffman, char *stringRunLength, char *b
  // msg[decod_fim + 1] = '\0';
   return 1;
 
-
-
-
-  
  
 }
 
@@ -272,5 +279,4 @@ void apagar_huffman(HUFFMAN **huffman) {
   free(*huffman);
   *huffman = NULL;
 }
-
 
