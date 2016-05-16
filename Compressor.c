@@ -57,9 +57,7 @@ int main(int argc, char *argv[])
   	
   	if (strcmp(argv[1],"-i") == 0)
   	{
-  		//printf("entrada \n");
-  		//printf("%s\n",argv[2]);
-
+  		
   		arq = fopen(argv[2], "r");
   		if (arq == NULL)
 		{
@@ -71,14 +69,12 @@ int main(int argc, char *argv[])
   		tamBlocoOri = tamBloco = atoi(saidaCmp);
 
   		bloco = (char*)malloc((tamBloco+1)*sizeof(char)); // para calcular a frequencia de letras.
-		stringRunLength = (char*)malloc(100*sizeof(char)); // para calcular a frequencia de letras.
+		stringRunLength = (char*)malloc(sizeof(char)); // para calcular a frequencia de letras.
 		blocoDescod = (char*)malloc(tamBloco*sizeof(char)); // para calcular a frequencia de letras.
 
 		ch = getc(arq);
 		while (ch != EOF)
 		{ 
-			
-
 			while (ch != EOF && j < tamBloco)
 			{	
 		  		bloco[j] = ch;
@@ -86,16 +82,11 @@ int main(int argc, char *argv[])
 		  		j++;
 			}
 			bloco[j] = '\0';
-			//for (i = 0; i < tamBloco; i++) printf("%c",bloco[i]);
 			if (j < tamBloco) tamBloco = j-1;
-			printf("Aqui\n");
-		for (i = 0; i < tamBloco; i++) printf("%c",bloco[i]);
 			j=0;
-			
-			//printf("tamBloco %d\n",tamBloco);
 			tratarArgv(argv[5],saidaCmp);
-				if (strcmp(saidaCmp,"true") == 0) // bwt
-				{
+			if (strcmp(saidaCmp,"true") == 0) // bwt
+			{
 
 				vector_R = (int*)malloc((tamBloco)*sizeof(int));
 				vector_T = (char*)malloc((tamBloco)*sizeof(char));
@@ -109,75 +100,54 @@ int main(int argc, char *argv[])
 				pegaLinhaL(string_rotate,vector_T,tamBloco);
 				quickSort(vector_T, aux_vector_T,vector_R,0,tamBloco-1,tamBloco);
 
-				printf("\nCodificacao BWT\n");
 				copiaString(string_rotate,vetor_F,blocoDescod,vector_R, tamBloco);
-				for (i = 0;i < tamBloco; i++) printf("%c",blocoDescod[i]);
-				printf("\n\n");			
 				a = indxInicioBloco(vector_R,tamBloco);
-				printf("A = %d\n",a );
+
 				
 				passo1 = 1;
-				//para descodificar
+				//para descodificar BWT
 				/*
 				mergeSort(vetor_F,0,tamBloco-1);
 				tamanho = criavetorK(vetor_k,vetor_F,tamBloco);
 				vetorFreqK = (int*)calloc(tamanho,sizeof(int));
-				preencheVetorC(bloco,vetor_k,vetorFreqK,vetorC,tamanho,tamBloco);*/
-				
-				//BWT
-
-				/*printf("BWT descodificada\n");
+				preencheVetorC(bloco,vetor_k,vetorFreqK,vetorC,tamanho,tamBloco);	
 				decodifiBWT(blocoDescod,bloco,vetor_F,vetorC,a,N);
 
-				for (i = 0; i < tamBloco; i++) printf("%c",blocoDescod[i]);
-				printf("\n\n");*/
+				*/
 
+				free(vector_R);
+				free(vector_T);
+				free(aux_vector_T);
+				free (string_rotate);
+				free (vetor_F);
+				free(vetor_k);
+				free(vetorC);
 
-					free(vector_R);
-					free(vector_T);
-					free(aux_vector_T);
-					free (string_rotate);
-					free (vetor_F);
-					free(vetor_k);
-					free(vetorC);
 				} 	
 				
 				tratarArgv(argv[7],saidaCmp);
 				if (strcmp(saidaCmp,"true")==0) // huffman
 				{
 					huffman = criar_huffman();
-				criar_arvore_huffman(huffman,bloco); 
-				criar_codigo(huffman);
-				tamHuffman = tamanhoHuffman(huffman,bloco,tamBloco);
-		   		blococofHuff = (char*)malloc((tamHuffman)*sizeof(char));
+					criar_arvore_huffman(huffman,bloco); 
+					criar_codigo(huffman);
+					tamHuffman = tamanhoHuffman(huffman,bloco,tamBloco);
+		   			blococofHuff = (char*)malloc((tamHuffman)*sizeof(char));
 
 					if(passo1 == 1)	codificar(huffman,blocoDescod,blococofHuff);
-
-
-					 else codificar(huffman,bloco,blococofHuff);
-
-			
-			//	printf("TA %d\n", tamanhoHuffman(huffman,bloco,tamBloco));
-					for(i =0; i < tamHuffman; i++) printf("%c", blococofHuff[i]); // arrumar
-					printf("\n");
-
-
-
-
+					else codificar(huffman,bloco,blococofHuff);
+	
 
 
 					//para descodificar
-					/*			bloco[j] = '\0';
+					/*
 					decodificar(huffman,codificado,decodificado);
-					printf("decodificacao: %s\n", decodificado); // arrumar
-				*/
+					printf("decodificacao: %s\n", decodificado); 
+					apagar_huffman(&huffman);
+					*/
 
-
-
-			//apagar_huffman(&huffman);
 
 					passo2 = 1;
-
 
 
 				}
@@ -185,44 +155,27 @@ int main(int argc, char *argv[])
 				if (strcmp(saidaCmp,"true")==0) // runlenght
 				{
 					 /**Run-Length**/
-				printf("\n\nUsar no run lenght\n");
-				printf("Vetor - TES\n");
-				for (i = 0; i < tamBloco; i++) printf("%c",bloco[i]);
-				printf("\n\n");
-				if (passo1 == 1 && passo2 != 1) 
-				{
-					tamRunlenght = calculaRunLengthFrequencia(blocoDescod,stringRunLength,tamBloco); //passa a string que queremos codificar(pura,huffman, BWT)
-					for (i = 0; i < tamRunlenght; i++) printf("%c",stringRunLength[i]);
-				printf("\n\n");
-				}
-				//arrumar as combinações
-				else if (passo2 == 1 && passo1 != 1) // não passou pelo bwt
-				{
+					
+					if (passo1 == 1 && passo2 != 1) 
+					{
+						tamRunlenght = calculaRunLengthFrequencia(blocoDescod,stringRunLength,tamBloco);
+					
+					}				
+					else if (passo2 == 1 && passo1 != 1) // não passou pelo bwt
+					{
+						tamRunlenght = codificarHuffmanRunLength(huffman,bloco,stringRunLength,tamBloco);
+					}
 
-					printf("Huffman para Run-Length\n");	
-					tamRunlenght = codificarHuffmanRunLength(huffman,bloco,stringRunLength,tamBloco);
-					printf("tamanho %d\n",tamRunlenght);
-					for (i = 0; i < tamRunlenght; i++) printf("%c",stringRunLength[i]);
-					printf("\n\n");	
-				}
-
-				else if (passo1 != 1 && passo2 != 1)
-				{
-					tamRunlenght = calculaRunLengthFrequencia(bloco,stringRunLength,tamBloco);
-					printf("tamanho %d\n",tamRunlenght);
-					for (i = 0; i < tamRunlenght; i++) printf("%c",stringRunLength[i]);
-					printf("\n\n");
-				} 
-				else 
-				{
-
-					printf("Huffman para Run-Length\n");	
-					tamRunlenght = codificarHuffmanRunLength(huffman,blocoDescod,stringRunLength,tamBloco);
-					printf("tamanho %d\n",tamRunlenght);
-					for (i = 0; i < tamRunlenght; i++) printf("%c",stringRunLength[i]);
-					printf("\n\n");	
-				 }
-				
+					else if (passo1 != 1 && passo2 != 1)
+					{
+						tamRunlenght = calculaRunLengthFrequencia(bloco,stringRunLength,tamBloco);
+			
+					} 
+					else 
+					{
+						tamRunlenght = codificarHuffmanRunLength(huffman,blocoDescod,stringRunLength,tamBloco);
+							
+				 	}				
 					
 				//para decodificar
 				/*
@@ -232,13 +185,10 @@ int main(int argc, char *argv[])
 						
 
 				passo3 = 1;
-				/*			descodificaRunLenght(stringRunLength,blocoDescod,tamRunlenght);
-				for (i = 0; i < N; i++) printf("%c",blocoDescod[i]);
-				printf("\n\n");*/
-			}
-
-	
-  	
+				// quando não for usando o huffman
+				/*descodificaRunLenght(stringRunLength,blocoDescod,tamRunlenght);*/
+			
+			}  	
 
   		if (flag == 0)
   		{
@@ -257,7 +207,7 @@ int main(int argc, char *argv[])
 			/*write(&tamBloco,sizeof(int),1,arqSaida);
 			fwrite(&a,sizeof(int),1,arqSaida);
 			fwrite(blocoDescod,tamBloco,1,arqSaida);*/
-			printf("gravou\n");
+			
 			if (tamBloco != tamBlocoOri) // chegou no EOF
 			{
 				fprintf(arqSaida, "%d%d",tamBloco,a);	
@@ -273,61 +223,111 @@ int main(int argc, char *argv[])
 				fprintf(arqSaida, "%d",a);	
 				fprintf(arqSaida, "%s",blocoDescod);
 			}
-			
-
-		
-
-
-
-
-
-
-
-
 		}
 		else if (passo1 != 1 && passo2 == 1 && passo3 != 1) // apenas huffman
 		{
-			fprintf(arqSaida, "%d%d\n",tamBloco,tamHuffman);	
-			fprintf(arqSaida, "%s",blococofHuff);	
+			
+			if (tamBloco != tamBlocoOri) // chegou no EOF
+			{
+				fprintf(arqSaida, "%d%d",tamBloco,tamHuffman);	
+				fprintf(arqSaida, "%s",blococofHuff);	
+			}
+			else
+			{
+				if (flag2 == 0)
+				{
+					fprintf(arqSaida, "%d%d",tamBloco,tamHuffman);	
+					flag2 = 1;	
+				} 
+				fprintf(arqSaida, "%s",blococofHuff);	
+			}
+
 		}
 		else if (passo1 != 1 && passo2 != 1 && passo3 == 1) // runlenght
 		{
-			fprintf(arqSaida, "%d%d\n",tamBloco,tamRunlenght);	
-			fprintf(arqSaida, "%s",stringRunLength);
+			
+			if (tamBloco != tamBlocoOri) // chegou no EOF
+			{
+				fprintf(arqSaida, "%d%d",tamBloco,tamRunlenght);	
+				fprintf(arqSaida, "%s",stringRunLength);
+			}
+			else
+			{
+				if (flag2 == 0)
+				{
+					fprintf(arqSaida, "%d%d",tamBloco,tamRunlenght);	
+					flag2 = 1;	
+				} 
+				fprintf(arqSaida, "%s",stringRunLength);	
+			}
 		}
 		else if (passo1 == 1 && passo2 == 1 && passo3 != 1) // bwt e huffman
 		{
-			fprintf(arqSaida, "%d%d%d\n",tamBloco,a,tamHuffman);	
-			fprintf(arqSaida, "%s",blocoDescod);
+
+
+			if (tamBloco != tamBlocoOri) // chegou no EOF
+			{			
+				fprintf(arqSaida, "%d%d%d",tamBloco,a,tamHuffman);	
+				fprintf(arqSaida, "%s",blococofHuff);
+			}
+			else
+			{
+				if (flag2 == 0)
+				{
+					fprintf(arqSaida, "%d%d%d",tamBloco,a,tamHuffman);			
+					flag2 = 1;	
+				} 
+				fprintf(arqSaida, "%d",a);
+				fprintf(arqSaida, "%s",blococofHuff);	
+			}
+			//free(blococofHuff);
 		}
 		else if (passo1 != 1 && passo2 == 1 && passo3 == 1) // huffman e runlenght
 		{
-			fprintf(arqSaida, "%d%d\n",tamBloco,tamRunlenght);	
-			fprintf(arqSaida, "%s",stringRunLength);
+			if (tamBloco != tamBlocoOri) // chegou no EOF
+			{			
+				fprintf(arqSaida, "%d%d",tamBloco,tamRunlenght);	
+				fprintf(arqSaida, "%s",stringRunLength);
+			}
+			else
+			{
+				if (flag2 == 0)
+				{
+					fprintf(arqSaida, "%d%d",tamBloco,tamRunlenght);			
+					flag2 = 1;	
+				} 
+				fprintf(arqSaida, "%s",stringRunLength);	
+			}	
 		}
 		else // bwt, huffman e  runlenght
 		{
-		 	fprintf(arqSaida, "%d%d%d\n",tamBloco,a,tamRunlenght);	
-			fprintf(arqSaida, "%s",stringRunLength);
+			if (tamBloco != tamBlocoOri) // chegou no EOF
+			{			
+				fprintf(arqSaida, "%d%d%d",tamBloco,a,tamRunlenght);	
+				fprintf(arqSaida, "%s",stringRunLength);
+			}
+			else
+			{
+				if (flag2 == 0)
+				{
+					fprintf(arqSaida, "%d%d%d",tamBloco,a,tamRunlenght);			
+					flag2 = 1;	
+				} 
+				fprintf(arqSaida, "%s%d",stringRunLength,a);	
+			}	
 		}	
-
-	 }
-  	}
-  	
-  	
-  	
-  	
+	  }
+  	} 	 	
 
 	fclose (arq);
 	fclose(arqSaida);
   	free(bloco);  	
 	free(stringRunLength);
-	
 	free(blocoDescod);
  	
-
 	
 return 0;
 }
+
 
 

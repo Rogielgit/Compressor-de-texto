@@ -24,10 +24,11 @@ int calculaRunLengthFrequencia(char *bloco, char *stringRunLength, int N) // par
 			n = sprintf(numeroConver, "%d", quantRepet); // função para converte int para string				
 			for (l = 0; l < n; l++)
 			{
-		//		stringRunLength = (char*)realloc(stringRunLength,(k+3)*sizeof(char));		
+				stringRunLength = (char*)realloc(stringRunLength,(k+1)*sizeof(char));		
 				stringRunLength[k] = numeroConver[l];
 				k++;
 			}
+			stringRunLength = (char*)realloc(stringRunLength,(k+2)*sizeof(char));		
 			stringRunLength[k] = '#'; // para identificação
 			quantRepet = 0;
 			k++; // para controlar o preenchimento na stringRunLength
@@ -39,14 +40,17 @@ int calculaRunLengthFrequencia(char *bloco, char *stringRunLength, int N) // par
 	n = sprintf(numeroConver, "%d", quantRepet); // função para converte int para string				
 	for (l = 0; l < n; l++)
 	{
-		//stringRunLength = (char*)realloc(stringRunLength,(k+3)*sizeof(char));		
+		stringRunLength = (char*)realloc(stringRunLength,(k+1)*sizeof(char));		
 		stringRunLength[k] = numeroConver[l];
 		k++;
 	}
+	stringRunLength = (char*)realloc(stringRunLength,(k+2)*sizeof(char));		
 	stringRunLength[k] = '#'; // para identificação
 	k++; // para controlar o preenchimento na stringRunLength
 	stringRunLength[k] = bloco[i];
-	k++; 
+	k++;
+	
+
 	
 
 return k;

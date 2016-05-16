@@ -1,0 +1,10 @@
+Nome: Rogiel Dos Santos Silva
+
+Para rodar o Programa
+
+1)Para compilar basta roda o make 
+2) E depois rodar o comando ./Compressor -i entrada  -o arquivosaida.bin --bwt=x --txtblck=N --huffman=x –-runl=x
+
+
+Onde o x pode ser false ou true e N será o tamanho do bloco.
+

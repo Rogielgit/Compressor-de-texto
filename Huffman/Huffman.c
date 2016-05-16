@@ -202,10 +202,7 @@ int codificarHuffmanRunLength(HUFFMAN *huffman, char *bloco, char *stringRunLeng
       stringRunLength = (char*)realloc(stringRunLength,(k+1)*sizeof(char));   
       stringRunLength[k] = pcod[f];        
       k++;                 
-    }
-  
-  
-    
+    }    
 return k;
 }
 
